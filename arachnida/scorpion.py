@@ -8,7 +8,8 @@ import pytz
 import sys
 import os
 
-
+customtkinter.set_appearance_mode("system")
+customtkinter.set_default_color_theme("dark-blue")  # Themes: "blue" (standard), "green", "dark-blue"
 class ImageMetadata:
     def __init__(self, image_path):
         self.file = image_path
@@ -16,8 +17,6 @@ class ImageMetadata:
         self.mode = None
         self.size = None
         self.exif_data = {}
-        self.creation_date = None
-
 
 class App(customtkinter.CTk):
     def __init__(self, data):
@@ -47,21 +46,16 @@ class App(customtkinter.CTk):
         self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
         self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
         self.appearance_mode_label.grid(row=5, column=0, padx=20, pady=(10, 0))
-        self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["Dark", "Light", "System"],
-                                                                       command=self.change_appearance_mode_event)
+        self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["System", "Light", "Dark"], command=self.change_appearance_mode_event)
         self.appearance_mode_optionemenu.grid(row=6, column=0, padx=20, pady=(10, 10))
         self.scaling_label = customtkinter.CTkLabel(self.sidebar_frame, text="UI Scaling:", anchor="w")
         self.scaling_label.grid(row=7, column=0, padx=20, pady=(10, 0))
-        self.scaling_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["100%", "80%", "90%", "110%", "120%"],
-                                                               command=self.change_scaling_event)
+        self.scaling_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["100%", "110%", "120%"], command=self.change_scaling_event)
         self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
 
         # create textbox
         self.textbox = customtkinter.CTkTextbox(self, width=600)
         self.textbox.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), rowspan=4, sticky="nsew")
-
-        # Display initial metadata
-        self.display_metadata(self.current_index)
 
         # create tabview
         self.sidebar_frame = customtkinter.CTkFrame(self, width=250, corner_radius=0)
@@ -69,15 +63,15 @@ class App(customtkinter.CTk):
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
         self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="Modify Data", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=0, column=3, padx=20, pady=(20, 10))
-        self.optionmenu_1 = customtkinter.CTkOptionMenu(self.sidebar_frame, dynamic_resizing=False,
-                                                        values=["Value 1", "Value 2", "Value Long Long Long"])
+        self.optionmenu_1 = customtkinter.CTkOptionMenu(self.sidebar_frame, dynamic_resizing=False, values=["File"])
         self.optionmenu_1.grid(row=1, column=3, padx=20, pady=(20, 10))
-        self.string_input_button = customtkinter.CTkButton(self.sidebar_frame, text="Modify",
-                                                           command=self.open_input_dialog_event)
+        self.string_input_button = customtkinter.CTkButton(self.sidebar_frame, text="Modify", command=self.open_input_dialog_event)
         self.string_input_button.grid(row=2, column=3, padx=20, pady=(10, 10))
-        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, text="Delete", command=self.sidebar_button_event, fg_color="red", hover_color="darkred")
+        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, text="Delete", command=self.sidebar_button_event, fg_color="#800000", hover_color="#600000")
         self.sidebar_button_1.grid(row=3, column=3, padx=20, pady=10)
 
+        # Display initial metadata
+        self.display_metadata(self.current_index)
 
     def display_metadata(self, index):
         self.textbox.delete("1.0", tk.END)
@@ -91,15 +85,16 @@ class App(customtkinter.CTk):
         self.textbox.insert(tk.END, f"Format: {metadata.format}\n")
         self.textbox.insert(tk.END, f"Mode: {metadata.mode}\n")
         self.textbox.insert(tk.END, f"Size: {metadata.size}\n")
-        self.textbox.insert(tk.END, f"Creation Date: {metadata.creation_date}\n")
 
+        optionmenu_values = ["File", "Format", "Mode", "Size"]
         if metadata.exif_data is not None:
-            self.textbox.insert(tk.END, "Metadata:\n")
             for tag, value in metadata.exif_data.items():
                 self.textbox.insert(tk.END, f"{tag}: {value}")
-
+                optionmenu_values.append(tag)
                 self.textbox.insert(tk.END, "\n")
 
+        # Update the optionmenu with new metadata keys
+        self.optionmenu_1.configure(values=optionmenu_values)
 
     def sidebar_button_next(self):
         if self.current_index < len(self.data) - 1:
@@ -141,15 +136,6 @@ def get_metadata(image_path):
                     metadata.exif_data[tag_name] = value
 
                 date_time = exif_data.get(36867, "Not available")
-                if date_time != "Not available":
-                    try:
-                        dt = datetime.strptime(date_time, "%Y:%m:%d %H:%M:%S")
-                        dt = dt.replace(tzinfo=pytz.UTC)
-                        metadata.creation_date = dt.isoformat()
-                    except ValueError:
-                        metadata.creation_date = date_time
-                else:
-                    metadata.creation_date = "Not available"
             else:
                 metadata.exif_data = None
 
