@@ -61,14 +61,6 @@ class App(customtkinter.CTk):
         self.sidebar_frame = customtkinter.CTkFrame(self, width=250, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=3, rowspan=4, sticky="nsew")
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
-        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="Modify Data", font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.logo_label.grid(row=0, column=3, padx=20, pady=(20, 10))
-        self.optionmenu_1 = customtkinter.CTkOptionMenu(self.sidebar_frame, dynamic_resizing=False, values=["File"])
-        self.optionmenu_1.grid(row=1, column=3, padx=20, pady=(20, 10))
-        self.string_input_button = customtkinter.CTkButton(self.sidebar_frame, text="Modify", command=self.open_input_dialog_event)
-        self.string_input_button.grid(row=2, column=3, padx=20, pady=(10, 10))
-        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, text="Delete", command=self.sidebar_button_event, fg_color="#800000", hover_color="#600000")
-        self.sidebar_button_1.grid(row=3, column=3, padx=20, pady=10)
 
         # Display initial metadata
         self.display_metadata(self.current_index)
@@ -86,15 +78,10 @@ class App(customtkinter.CTk):
         self.textbox.insert(tk.END, f"Mode: {metadata.mode}\n")
         self.textbox.insert(tk.END, f"Size: {metadata.size}\n")
 
-        optionmenu_values = ["File", "Format", "Mode", "Size"]
         if metadata.exif_data is not None:
             for tag, value in metadata.exif_data.items():
                 self.textbox.insert(tk.END, f"{tag}: {value}")
-                optionmenu_values.append(tag)
                 self.textbox.insert(tk.END, "\n")
-
-        # Update the optionmenu with new metadata keys
-        self.optionmenu_1.configure(values=optionmenu_values)
 
     def sidebar_button_next(self):
         if self.current_index < len(self.data) - 1:
@@ -105,10 +92,6 @@ class App(customtkinter.CTk):
         if self.current_index > 0:
             self.current_index -= 1
             self.display_metadata(self.current_index)
-
-    def open_input_dialog_event(self):
-        dialog = customtkinter.CTkInputDialog(text="Type in a new value:", title="Modify data")
-        print("CTkInputDialog:", dialog.get_input())
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         customtkinter.set_appearance_mode(new_appearance_mode)
