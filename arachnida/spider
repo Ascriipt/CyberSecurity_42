@@ -46,11 +46,8 @@ def spyder(curr_url: str, current_depth=0):
     except OSError as e:
         pass
 
-    try:
-        os.access(args.p, os.W_OK)
-    except OSError as e:
-        print(f"Error: {e}")
-        sys.exit(1)
+    if not os.access(args.p, os.W_OK):
+        sys.exit(f"Error: no write access for {args.p}.")
 
     soup = BeautifulSoup(page.text, "html.parser")
 
