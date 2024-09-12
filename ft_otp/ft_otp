@@ -40,11 +40,11 @@ def main(args):
 		hmac_sha1 = hmac.new(key, counter_bytes, hashlib.sha1).digest()
 
 		offset = hmac_sha1[-1] & 0x0F
-		binary_code = struct.unpack(">I", hmac_sha1[offset:offset + 4])[0]
+		binary_code = struct.unpack(">I", hmac_sha1[offset:offset + 4])[0] & 0x7FFFFFFF
 
-		otp = binary_code % (10 ** 6)
+		OTP = binary_code % (10 ** 6)
 
-	print(str(otp).zfill(6))
+		print(str(OTP).zfill(6))
 
 if __name__ == "__main__":
 	try:
