@@ -1,0 +1,33 @@
+#!/usr/bin/env python
+
+import argparse
+import hashlib
+import sys
+import os
+
+def main(args):
+	if not args.g and not args.k or args.g and args.k:
+		raise RuntimeError("usage ft_otp --help")
+	elif args.g:
+		if os.path.isfile(args.g) and os.access(args.g, os.R_OK):
+			g_key = open(args.g).read()
+		else:
+			g_key = args.g
+		if len(g_key) < 64:
+			raise ValueError("Key is too short.")
+		int(g_key.lower(), 16)
+		encrypted_key = hashlib.sha1(g_key.encode()).hexdigest()
+	print(encrypted_key)
+
+if __name__ == "__main__":
+	try:
+		parser = argparse.ArgumentParser(description="OTP Generator")
+		# parser.add_argument("KEY", type=str, help="the name of the file or the key itself")
+		parser.add_argument("-k", metavar="file.key", type=str, help="generate a temporary password from the given key")
+		parser.add_argument("-g", metavar="[file.txt, key]", type=str, help="store's a hexadecimal key of at least 64 characters in an encrypted format.")
+		args = parser.parse_args()
+		main(args)
+	except ValueError as e:
+		print(f"Error: {e}")
+	except Exception as e:
+		print(f"Error: {e}")
