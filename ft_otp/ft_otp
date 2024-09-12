@@ -2,12 +2,16 @@
 
 import argparse
 import hashlib
+import struct
+import time
+import hmac
 import sys
 import os
 
 def main(args):
+	file = "ft_otp.key"
 	if not args.g and not args.k or args.g and args.k:
-		raise RuntimeError("usage ft_otp --help")
+		raise RuntimeError("usage: ft_otp --help")
 	elif args.g:
 		if os.path.isfile(args.g) and os.access(args.g, os.R_OK):
 			g_key = open(args.g).read()
@@ -17,17 +21,46 @@ def main(args):
 			raise ValueError("Key is too short.")
 		int(g_key.lower(), 16)
 		encrypted_key = hashlib.sha1(g_key.encode()).hexdigest()
-	print(encrypted_key)
+		if os.path.exists(file):
+			if not os.access(file, os.W_OK):
+				raise OSError("no write access to file.")
+		with open(file, "w") as fil:
+			fil.write(encrypted_key)
+	elif args.k:
+		if args.k != file:
+			raise RuntimeError("file has wrong name.")
+		if not os.path.isfile(args.k) or not os.access(args.k, os.R_OK):
+			raise ValueError("no access to file.")
+		else:
+			k_key = open(args.k).read().lower()
+		int(k_key, 16)
+		counter = int(time.time())
+		key = bytes(k_key, 'utf-8')  # Convert secret key to bytes
+		counter_bytes = struct.pack('>Q', counter) # Pack the counter into 8 bytes (big-endian)
+		hmac_sha1 = hmac.new(key, counter_bytes, hashlib.sha1).digest()
+
+		# Truncate the HMAC-SHA1 hash to get a 4-byte string
+		offset = hmac_sha1[-1] & 0x0F  # Get the last nibble to use as an offset
+		binary_code = struct.unpack(">I", hmac_sha1[offset:offset + 4])[0] & 0x7FFFFFFF  # Extract 31 bits
+
+		# Get the final code by taking modulo to limit the number of digits
+		otp = binary_code % (10 ** 6)
+
+	# Format the OTP to ensure it has leading zeroes if needed
+	print(str(otp).zfill(6))
 
 if __name__ == "__main__":
 	try:
 		parser = argparse.ArgumentParser(description="OTP Generator")
-		# parser.add_argument("KEY", type=str, help="the name of the file or the key itself")
 		parser.add_argument("-k", metavar="file.key", type=str, help="generate a temporary password from the given key")
 		parser.add_argument("-g", metavar="[file.txt, key]", type=str, help="store's a hexadecimal key of at least 64 characters in an encrypted format.")
 		args = parser.parse_args()
 		main(args)
+	except OSError as e:
+		print(f"OSError: {e}")
+	except RuntimeError as e:
+		print(f"RuntimeError: {e}")
 	except ValueError as e:
-		print(f"Error: {e}")
+		print(f"ValueError: {e}")
 	except Exception as e:
 		print(f"Error: {e}")
