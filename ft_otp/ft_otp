@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import tkinter as tk
+import customtkinter
 import argparse
 import hashlib
 import struct
@@ -8,56 +10,75 @@ import hmac
 import sys
 import os
 
+class App(customtkinter.CTk):
+    def __init__(self, data):
+        super().__init__()
+
+        self.attributes('-fullscreen', True)
+
+        self.label = customtkinter.CTkLabel(self, text=data, font=("Monont", 8))
+        self.label.pack(expand=True, fill="both")
+
+        self.bind("<Escape>", self.close_window)
+
+    def close_window(self, event=None):
+        self.destroy()
+
 def main(args):
-	file = "ft_otp.key"
-	if not args.g and not args.k or args.g and args.k:
-		raise RuntimeError("usage: ft_otp --help")
-	elif args.g:
-		if os.path.isfile(args.g) and os.access(args.g, os.R_OK):
-			g_key = open(args.g).read()
-		else:
-			g_key = args.g
-		if len(g_key) < 64:
-			raise ValueError("Key is too short.")
-		int(g_key.lower(), 16)
-		encrypted_key = hashlib.sha1(g_key.encode()).hexdigest()
-		if os.path.exists(file):
-			if not os.access(file, os.W_OK):
-				raise OSError("no write access to file.")
-		with open(file, "w") as fil:
-			fil.write(encrypted_key)
-	elif args.k:
-		if args.k != file:
-			raise RuntimeError("file has wrong name.")
-		if not os.path.isfile(args.k) or not os.access(args.k, os.R_OK):
-			raise ValueError("no access to file.")
-		else:
-			k_key = open(args.k).read().lower()
-		int(k_key, 16)
-		counter = int(time.time())
-		key = bytes(k_key, 'utf-8')
-		counter_bytes = struct.pack('>Q', counter)
-		hmac_sha1 = hmac.new(key, counter_bytes, hashlib.sha1).digest()
+    file = "ft_otp.key"
+    if not args.g and not args.k or args.g and args.k:
+        raise RuntimeError("usage: ft_otp --help")
+    elif args.g:
+        if os.path.isfile(args.g) and os.access(args.g, os.R_OK):
+            g_key = open(args.g).read()
+        else:
+            g_key = args.g
+        if len(g_key) < 64:
+            raise ValueError("Key is too short.")
+        int(g_key.lower(), 16)
+        encrypted_key = hashlib.sha1(g_key.encode()).hexdigest()
+        if os.path.exists(file):
+            if not os.access(file, os.W_OK):
+                raise OSError("no write access to file.")
+        with open(file, "w") as fil:
+            fil.write(encrypted_key)
+    elif args.k:
+        if args.k != file:
+            raise RuntimeError("file has wrong name.")
+        if not os.path.isfile(args.k) or not os.access(args.k, os.R_OK):
+            raise ValueError("no access to file.")
+        else:
+            k_key = open(args.k).read().lower()
+        int(k_key, 16)
+        counter = int(time.time())
+        key = bytes(k_key, 'utf-8')
+        counter_bytes = struct.pack('>Q', counter)
+        hmac_sha1 = hmac.new(key, counter_bytes, hashlib.sha1).digest()
 
-		offset = hmac_sha1[-1] & 0x0F
-		binary_code = struct.unpack(">I", hmac_sha1[offset:offset + 4])[0] & 0x7FFFFFFF
+        offset = hmac_sha1[-1] & 0x0F
+        binary_code = struct.unpack(">I", hmac_sha1[offset:offset + 4])[0] & 0x7FFFFFFF
 
-		OTP = binary_code % (10 ** 6)
+        OTP = binary_code % (10 ** 6)
 
-		print(str(OTP).zfill(6))
+        if (args.v):
+            gui = App(str(OTP).zfill(6))
+            gui.mainloop()
+        else:
+            print(str(OTP).zfill(6))
 
 if __name__ == "__main__":
-	try:
-		parser = argparse.ArgumentParser(description="OTP Generator")
-		parser.add_argument("-k", metavar="file.key", type=str, help="generate a temporary password from the given key")
-		parser.add_argument("-g", metavar="[file.txt, key]", type=str, help="store's a hexadecimal key of at least 64 characters in an encrypted format.")
-		args = parser.parse_args()
-		main(args)
-	except OSError as e:
-		print(f"OSError: {e}")
-	except RuntimeError as e:
-		print(f"RuntimeError: {e}")
-	except ValueError as e:
-		print(f"ValueError: {e}")
-	except Exception as e:
-		print(f"Error: {e}")
+    try:
+        parser = argparse.ArgumentParser(description="OTP Generator")
+        parser.add_argument("-k", metavar="file.key", type=str, help="generate a temporary password from the given key")
+        parser.add_argument("-g", metavar="[file.txt, key]", type=str, help="store's a hexadecimal key of at least 64 characters in an encrypted format.")
+        parser.add_argument("-v", help="invoke a visual journey", action="store_true")
+        args = parser.parse_args()
+        main(args)
+    except OSError as e:
+        print(f"OSError: {e}")
+    except RuntimeError as e:
+        print(f"RuntimeError: {e}")
+    except ValueError as e:
+        print(f"ValueError: {e}")
+    except Exception as e:
+        print(f"Error: {e}")
