@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>42 Bagarre</title>
+    <style>
+        /* Global Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Brush Script MT', serif;
+            background-color: #f5f5f5;
+            color: #000;
+        }
+
+        /* Header */
+        header {
+			display: flex;
+			flex-direction: row;
+			justify-content: left;
+			align-items: center;
+            background-color: #200116;
+            color: white;
+            padding: 20px;
+        }
+
+		header img {
+			margin-right: 15px;
+		}
+
+        header h1 {
+			text-align: left;
+            font-size: 2.5em;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        header p {
+            font-size: 1.2em;
+            margin: 5px 0 0;
+        }
+
+		.text-container {
+			display: flex;
+			flex-direction: column;
+		}
+
+        /* Navigation */
+        nav {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        nav a {
+            color: #ff48d7;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 15px;
+            font-size: 1.1em;
+        }
+
+        nav a:hover {
+            color: #4c0827;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .container h2 {
+            text-align: center;
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            color: #444;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .content div {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .content div h3 {
+            margin-top: 0;
+            color: #666;
+        }
+
+        .content div p {
+            font-size: 1em;
+            line-height: 1.6;
+            color: #777;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #222;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 40px;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 0.9em;
+        }
+
+        footer a {
+            color: #f5f5f5;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #ddd;
+        }
+
+        /* Responsive Media Query */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            header p {
+                font-size: 1em;
+            }
+
+            .container h2 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+		<img src="42Bagarre.png" width="150" height="150"></img>
+		<div class="text-container">
+			<h1>42Bagar</h1>
+			<p>Hire a REAL man to fight for you.</p>
+		</div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Contact</a>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h2>Our Featured Services</h2>
+        <div class="content">
+            <div>
+                <h3>Service One</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</p>
+            </div>
+            <div>
+                <h3>Service Two</h3>
+                <p>Aenean lacinia bibendum nulla sed consectetur. Cras mattis consectetur purus sit amet fermentum.</p>
+            </div>
+            <div>
+                <h3>Service Three</h3>
+                <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Maecenas faucibus mollis interdum.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Classy Design | <a href="#">Privacy Policy</a></p>
+    </footer>
+
+</body>
+</html>
+
