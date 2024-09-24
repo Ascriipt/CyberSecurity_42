@@ -13,17 +13,25 @@
             font-family: 'Brush Script MT', serif;
             background-color: #f5f5f5;
             color: #000;
+			height: 100%;
         }
+
+		body {
+			display: flex;
+			flex-direction: column;
+		}
 
         /* Header */
         header {
 			display: flex;
 			flex-direction: row;
-			justify-content: left;
+			justify-content: flex-start;
 			align-items: center;
             background-color: #200116;
-            color: white;
-            padding: 20px;
+            color: #CDC5B4;
+			padding-top: 1%;
+            padding-left: 1%;
+            padding-right: 2%;
         }
 
 		header img {
@@ -31,6 +39,7 @@
 		}
 
         header h1 {
+			display: flex;
 			text-align: left;
             font-size: 2.5em;
             margin: 0;
@@ -42,24 +51,31 @@
             margin: 5px 0 0;
         }
 
+		.flex-end-div {
+			margin-left: auto;
+		}
+
 		.text-container {
 			display: flex;
 			flex-direction: column;
 		}
 
         /* Navigation */
-        nav {
-            text-align: center;
-            margin-top: 15px;
-        }
 
-        nav a {
-            color: #ff48d7;
-            text-decoration: none;
-            font-weight: bold;
-            margin: 0 15px;
-            font-size: 1.1em;
-        }
+		nav {
+    		display: grid;
+    		grid-template-columns: 1fr 1fr; /* Two columns of equal width */
+    		grid-template-rows: 1fr 1fr;    /* Two rows of equal height */
+    		gap: 10px;                      /* Optional: add spacing between grid items */
+		}
+
+		nav a {
+    		color: #CDC5B4;
+	    text-decoration: none;
+    	font-weight: bold;
+    	text-align: center; /* Center text in each grid block */
+    	padding: 10px;      /* Add padding for spacing within each grid block */
+		}
 
         nav a:hover {
             color: #4c0827;
@@ -70,6 +86,7 @@
             max-width: 1200px;
             margin: 30px auto;
             padding: 20px;
+			flex-grow: 1;
         }
 
         .container h2 {
@@ -109,7 +126,7 @@
             color: white;
             text-align: center;
             padding: 15px;
-            margin-top: 40px;
+            margin-top: auto;
         }
 
         footer p {
@@ -146,20 +163,20 @@
 
     <!-- Header -->
     <header>
-		<img src="42Bagarre.png" width="150" height="150"></img>
-		<div class="text-container">
-			<h1>42Bagar</h1>
-			<p>Hire a REAL man to fight for you.</p>
-		</div>
+        <img src="42Bagarre.png" width="150" height="150">
+        <div class="text-container">
+            <h1>42Bagar</h1>
+            <p>Hire a REAL man to fight for you.</p>
+        </div>
+        <div class="flex-end-div">
+            <nav>
+                <a href="#">Home</a>
+                <a href="#">About</a>
+                <a href="#">Services</a>
+                <a href="#">Contact</a>
+            </nav>
+        </div>
     </header>
-
-    <!-- Navigation -->
-    <nav>
-        <a href="#">Home</a>
-        <a href="#">About</a>
-        <a href="#">Services</a>
-        <a href="#">Contact</a>
-    </nav>
 
     <!-- Main Container -->
     <div class="container">
@@ -177,12 +194,24 @@
                 <h3>Service Three</h3>
                 <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Maecenas faucibus mollis interdum.</p>
             </div>
+			<div>
+                <h3>Service Four</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</p>
+            </div>
+            <div>
+                <h3>Service Five</h3>
+                <p>Aenean lacinia bibendum nulla sed consectetur. Cras mattis consectetur purus sit amet fermentum.</p>
+            </div>
+            <div>
+                <h3>Service Six</h3>
+                <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Maecenas faucibus mollis interdum.</p>
+            </div>
         </div>
     </div>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 Classy Design | <a href="#">Privacy Policy</a></p>
+        <p>&copy; 2024 Crappy Design | <a href="#">Privacy Policy</a></p>
     </footer>
 
 </body>
