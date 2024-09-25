@@ -1,56 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>42 Bagarre</title>
-    <style>
-        /* Global Styles */
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Brush Script MT', serif;
-            background-color: #CDC5B4;
-            color: #000;
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>42 Bagarre</title>
+	<style>
+
+		body, html {
+			margin: 0;
+			padding: 0;
+			font-family: 'Monospace';
+			background-color: #CDC5B4;
+			color: #000;
 			height: 100%;
-        }
+		}
 
 		body {
 			display: flex;
 			flex-direction: column;
 		}
 
-        /* Header */
-        header {
+		header {
 			display: flex;
 			flex-direction: row;
 			justify-content: flex-start;
 			align-items: center;
-            background-color: #200116;
-            color: #CDC5B4;
+			background-color: #200116;
+			color: #CDC5B4;
 			padding-top: 1%;
-            padding-left: 1%;
-            padding-right: 2%;
-            box-shadow: 0 9px 9px rgba(0, 0, 0, 0.3);
-        }
+			padding-left: 1%;
+			padding-right: 2%;
+			box-shadow: 0 9px 9px rgba(0, 0, 0, 0.3);
+		}
 
 		header img {
 			margin-right: 15px;
 		}
 
-        header h1 {
+		header h1 {
 			display: flex;
 			text-align: left;
-            font-size: 2.5em;
-            margin: 0;
-            font-weight: 400;
-        }
+			font-size: 2.5em;
+			margin: 0;
+			font-weight: 400;
+		}
 
-        header p {
-            font-size: 1.2em;
-            margin: 5px 0 0;
-        }
+		header p {
+			font-size: 1.2em;
+			margin: 5px 0 0;
+		}
 
 		.flex-end-div {
 			margin-left: auto;
@@ -61,163 +60,178 @@
 			flex-direction: column;
 		}
 
-        /* Navigation */
-
 		nav {
-    		display: grid;
-    		grid-template-columns: 1fr 1fr; /* Two columns of equal width */
-    		grid-template-rows: 1fr 1fr;    /* Two rows of equal height */
-    		gap: 10px;                      /* Optional: add spacing between grid items */
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			grid-template-rows: 1fr 1fr;
+			gap: 10px;
 		}
 
 		nav a {
-    		color: #CDC5B4;
-	    	text-decoration: none;
-    		font-weight: bold;
-    		text-align: center; /* Center text in each grid block */
-    		padding: 10px;      /* Add padding for spacing within each grid block */
+			color: #CDC5B4;
+			text-decoration: none;
+			font-weight: bold;
+			text-align: center;
+			padding: 10px;
 		}
 
-        nav a:hover {
-            color: #4c0827;
-        }
+		nav a:hover {
+			color: #4c0827;
+		}
 
-        /* Main Content */
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 20px;
+		/* Main Content */
+		.container {
+			max-width: 1200px;
+			margin: 30px auto;
+			padding: 20px;
 			flex-grow: 1;
-        }
+		}
 
-        .container h2 {
-            text-align: center;
-            font-size: 2.2em;
-            margin-bottom: 30px;
-            color: #200116;
-        }
+		.container h2 {
+			text-align: center;
+			font-size: 2.2em;
+			margin-bottom: 30px;
+			color: #200116;
+		}
 
-        .content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		.content {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+			justify-content: center;
 			/* grid-template-columns: repeat(3, minmax(200px, 1fr)); */
 			/* grid-template-columns: repeat(3, 1fr); */
 			gap: 20px;
-        }
+		}
 
-        .content div {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+		.content div {
+			background-color: white;
+			padding: 20px;
+			border-radius: 10px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			text-align: center;
+		}
 
-        .content div h3 {
-            margin-top: 0;
-            color: #666;
-        }
+		.content div img {
+			border-radius: 10px;
+			display: block;
+			margin: 0 auto;
+		}
 
-        .content div p {
-            font-size: 1em;
-            line-height: 1.6;
-            color: #777;
-        }
+		.content div h3 {
+			margin-top: 0;
+			color: #666;
+		}
 
-        /* Footer */
-        footer {
-            background-color: #222;
-            color: #CDC5B4;
-            text-align: center;
-            padding: 15px;
-            margin-top: auto;
-        }
+		.content div p {
+			font-size: 1em;
+			line-height: 1.6;
+			color: #777;
+		}
 
-        footer p {
-            margin: 0;
-            font-size: 0.9em;
-        }
+		/* Footer */
+		footer {
+			background-color: #222;
+			color: #CDC5B4;
+			text-align: center;
+			padding: 15px;
+			margin-top: auto;
+		}
 
-        footer a {
-            color: #CDC5B4;
-            text-decoration: none;
-        }
+		footer p {
+			margin: 0;
+			font-size: 0.9em;
+		}
 
-        footer a:hover {
-            color: #ddd;
-        }
+		footer a {
+			color: #CDC5B4;
+			text-decoration: none;
+		}
 
-        /* Responsive Media Query */
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 2em;
-            }
+		footer a:hover {
+			color: #ddd;
+		}
 
-            header p {
-                font-size: 1em;
-            }
+		/* Responsive Media Query */
+		@media (max-width: 768px) {
+			header h1 {
+				font-size: 2em;
+			}
 
-            .container h2 {
-                font-size: 1.8em;
-            }
-        }
-    </style>
+			header p {
+				font-size: 1em;
+			}
+
+			.container h2 {
+				font-size: 1.8em;
+			}
+		}
+	</style>
 </head>
 <body>
 
-    <!-- Header -->
-    <header>
-        <img src="42Bagarre.png" width="150" height="150">
-        <div class="text-container">
-            <h1>42Bagar</h1>
-            <p>Hire a REAL man to fight for you</p>
-        </div>
-        <div class="flex-end-div">
-            <nav>
-                <a href="#">Home</a>
-                <a href="#">About</a>
-                <a href="#">Services</a>
-                <a href="#">Contact</a>
-            </nav>
-        </div>
-    </header>
+	<script>
+		function loadContent(page) {
+			const content = document.getElementById('content');
 
-    <!-- Main Container -->
-    <div class="container">
-        <h2>Our Brawler selection</h2>
-        <div class="content">
-            <div>
-                <h3>Service One</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</p>
-            </div>
-            <div>
-                <h3>Service Two</h3>
-                <p>Aenean lacinia bibendum nulla sed consectetur. Cras mattis consectetur purus sit amet fermentum.</p>
-            </div>
-            <div>
-                <h3>Service Three</h3>
-                <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Maecenas faucibus mollis interdum.</p>
-            </div>
+			if (page === 'home') {
+				location.reload()
+			} else if (page === 'about') {
+				content.innerHTML = `
+					<h2>About Us</h2>
+					<p>42Bagar, helping you overcome your ennemies since 1743.</p>
+				`;
+			} else if (page === 'services') {
+				content.innerHTML = `
+					<h2>Our Services</h2>
+					<p>We offer massive chads that will fight for you in your hour of need.</p>
+					<p>prices start at 1BTC</p>
+				`;
+			} else if (page === 'contact') {
+				content.innerHTML = `
+					<h2>Contact Us</h2>
+					<p>Get in touch with us via <a href="mailto:maparigi@student.42.fr">email</a> or phone.</p>
+				`;
+			}
+		}
+	</script>
+
+	<header>
+		<img src="42Bagarre.png" width="150" height="150">
+		<div class="text-container">
+			<h1>42Bagar</h1>
+			<p>Hire a REAL man to fight for you</p>
+		</div>
+		<div class="flex-end-div">
+			<nav>
+				<a href="#" onclick="loadContent('home')">Home</a>
+				<a href="#" onclick="loadContent('about')">About</a>
+				<a href="#" onclick="loadContent('services')">Services</a>
+				<a href="#" onclick="loadContent('contact')">Contact</a>
+			</nav>
+		</div>
+	</header>
+
+	<div class="container" id="content">
+		<h2>Our Brawler selection</h2>
+		<div class="content">
+			<div class="pictu">
+				<h3>embedois (1 BTC)</h3>
+				<img src="embedois.jpg" height="125" width="125">
+			</div>
 			<div>
-                <h3>Service Four</h3>
-				<!-- <img src="42Bagarre.png" width="70" height="70"></div> -->
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</p>
-            </div>
-            <div>
-                <h3>Service Five</h3>
-                <p>Aenean lacinia bibendum nulla sed consectetur. Cras mattis consectetur purus sit amet fermentum.</p>
-            </div>
-            <div>
-                <h3>Service Six</h3>
-                <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Maecenas faucibus mollis interdum.</p>
-            </div>
-        </div>
-    </div>
+				<h3>Certified BadGuy (1000 BTC)</h3>
+				<img src="maparigi.jpg" height="125" width="125">
+			</div>
+			<div>
+				<h3>True Pedagogue (-1 BTC)</h3>
+				<img src="jbonniva.jpg" height="125" width="125">
+			</div>
+		</div>
+	</div>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 Crappy Design | <a href="#">Privacy Policy</a></p>
-    </footer>
+	<footer>
+		<p>&copy; 2024 Crappy Design | <a href="#">Privacy Policy</a></p>
+	</footer>
 
 </body>
 </html>
-

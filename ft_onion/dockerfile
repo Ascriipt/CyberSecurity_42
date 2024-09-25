@@ -1,9 +1,22 @@
 FROM debian:buster-slim
 
+RUN apt-get update && \
+    apt-get install -y nginx tor supervisor openssh-server && \
+    apt-get clean
+
+RUN sed -i 's/#Port 22/Port 4242/' /etc/ssh/sshd_config && \
+    echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config && \
+    echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config && \
+    mkdir /var/run/sshd
+
 COPY src/* /var/www/html/
 
-RUN apt-get update && \
-    apt-get install -y nginx supervisor && \
-    rm -rf /var/lib/apt/lists/*
+COPY supervisord.conf /etc/supervisord/conf.d/
 
-EXPOSE 80
+COPY nginx.conf /etc/nginx/nginx.conf
+
+COPY torrc /etc/tor/torrc
+
+EXPOSE 80 4242
+
+CMD ["supervisord", "-c", "/etc/supervisord/conf.d/supervisord.conf"]
