@@ -1,4 +1,4 @@
-Port 22
+Port 4242
 ListenAddress 0.0.0.0
 
 SyslogFacility AUTHPRIV
