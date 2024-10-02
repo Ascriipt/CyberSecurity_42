@@ -1,10 +1,13 @@
 FROM python:3.9-slim
 
-WORKDIR /app
+WORKDIR /infection
 
-COPY stockholm.py /app
+COPY stockholm /infection
+COPY extensions /infection
 
 RUN pip install --upgrade pip && \
-	pip install cryptography
+	pip install cryptography \
+	argparse \
+	tqdm
 
 CMD [ "tail", "-f", "/dev/null" ]

