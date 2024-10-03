@@ -1,7 +1,7 @@
 CONTAINER_NAME = rancongiciel
 IMAGE_NAME = rancongiciel
 
-.PHONY: re build run stop rm join launch
+.PHONY: re build run stop rm join all
 
 re: stop rm build run join
 
@@ -9,7 +9,7 @@ clean: stop rm
 
 start: build run
 
-launch: build run join
+all: build run join
 
 build:
 	docker build -t ${IMAGE_NAME} .
