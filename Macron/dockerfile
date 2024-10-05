@@ -1,13 +1,15 @@
-FROM python:3.9-slim
+# Attacker dockerfile
+FROM ubuntu
 
-WORKDIR /Macron
+RUN apt update && apt install -y python3 python3-pip iputils-ping net-tools tcpdump python3.12-venv
 
-COPY inquisitor /Macron/
+RUN python3 -m venv /root/attacker/my-venv
 
-RUN pip install --upgrade pip && \
-	pip install cryptography \
-	ipaddress \
-	argparse \
-	re
+RUN /root/attacker/my-venv/bin/pip install scapy ipaddress argparse
 
+WORKDIR /root/attacker
+
+COPY ./inquisitor /root/attacker/
+
+# ENTRYPOINT [ "/root/attacker/my-venv/bin/python3", "/root/attacker/inquisitor" ]
 CMD [ "tail", "-f", "/dev/null" ]

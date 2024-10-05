@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+  victim:
+    image: ubuntu
+    container_name: victim
+    networks:
+      test-net: {}  # This keeps the network definition, and maintains the format
+      # ipv4_address: 172.20.0.2
+    privileged: true
+    command: >
+      /bin/bash -c "while true; do
+        hostname -i && cat /sys/class/net/eth0/address;
+        sleep 10;
+      done"
+
+  gateway:
+    image: ubuntu
+    container_name: gateway
+    networks:
+      test-net: {}  # This keeps the network definition, and maintains the format
+      # ipv4_address: 172.20.0.1
+    privileged: true
+    command: >
+      /bin/bash -c "while true; do
+        hostname -i && cat /sys/class/net/eth0/address;
+        sleep 10;
+      done"
+
+  attacker:
+    build:
+      context: ./  # This points to the directory where Dockerfile and inquisitor exist
+    container_name: attacker
+    depends_on:
+      - victim
+      - gateway
+    networks:
+      test-net: {}  # This keeps the network definition, and maintains the format
+      # ipv4_address: 172.20.0.3
+    privileged: true
+    command: >
+      /bin/bash -c "while true; do
+        hostname -i && cat /sys/class/net/eth0/address;
+        sleep 10;
+      done"
+
+networks:
+  test-net:
+    driver: bridge
+    # ipam:
+    #   config:
+    #     - subnet: 172.20.0.0/16

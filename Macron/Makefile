@@ -1,27 +1,9 @@
-CONTAINER_NAME = rancongiciel
-IMAGE_NAME = rancongiciel
-
-.PHONY: re build run stop rm join all
-
-re: stop rm build run join
-
-clean: stop rm
-
-start: build run
-
-all: build run join
+all: build
 
 build:
-	docker build -t ${IMAGE_NAME} .
-
-run:
-	docker run -d --name ${CONTAINER_NAME} ${IMAGE_NAME}
+	docker-compose up --build
 
 stop:
-	-docker stop ${CONTAINER_NAME}
+	docker-compose down -v
 
-rm:
-	-docker rm ${CONTAINER_NAME}
-
-join:
-	@-docker exec -it ${CONTAINER_NAME} /bin/bash
+.PHONY: all build stop
