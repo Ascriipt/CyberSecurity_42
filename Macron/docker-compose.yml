@@ -11,7 +11,7 @@ services:
     command: >
       /bin/bash -c "while true; do
         hostname -i && cat /sys/class/net/eth0/address;
-        sleep 10;
+        sleep 100;
       done"
 
   gateway:
@@ -24,7 +24,7 @@ services:
     command: >
       /bin/bash -c "while true; do
         hostname -i && cat /sys/class/net/eth0/address;
-        sleep 10;
+        sleep 100;
       done"
 
   attacker:
@@ -41,7 +41,7 @@ services:
     command: >
       /bin/bash -c "while true; do
         hostname -i && cat /sys/class/net/eth0/address;
-        sleep 10;
+        sleep 100;
       done"
 
 networks:

