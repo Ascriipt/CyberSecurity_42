@@ -1,52 +1,50 @@
-version: '3'
-
 services:
-  victim:
-    image: ubuntu
-    container_name: victim
-    networks:
-      test-net: {}  # This keeps the network definition, and maintains the format
-      # ipv4_address: 172.20.0.2
+  client:
+    container_name: client
     privileged: true
-    command: >
-      /bin/bash -c "while true; do
-        hostname -i && cat /sys/class/net/eth0/address;
-        sleep 100;
-      done"
-
-  gateway:
-    image: ubuntu
-    container_name: gateway
-    networks:
-      test-net: {}  # This keeps the network definition, and maintains the format
-      # ipv4_address: 172.20.0.1
-    privileged: true
-    command: >
-      /bin/bash -c "while true; do
-        hostname -i && cat /sys/class/net/eth0/address;
-        sleep 100;
-      done"
-
-  attacker:
     build:
-      context: ./  # This points to the directory where Dockerfile and inquisitor exist
-    container_name: attacker
-    depends_on:
-      - victim
-      - gateway
+      context: .
+      dockerfile: Dockerfile.target
+    mac_address: ${MAC_CLIENT}
     networks:
-      test-net: {}  # This keeps the network definition, and maintains the format
-      # ipv4_address: 172.20.0.3
+      inquisitor:
+        ipv4_address: ${IP_CLIENT}
+  ftp-server:
+    container_name: ftp-server
     privileged: true
-    command: >
-      /bin/bash -c "while true; do
-        hostname -i && cat /sys/class/net/eth0/address;
-        sleep 100;
-      done"
+    build:
+      context: ./ftp-server
+      dockerfile: Dockerfile.server
+    ports:
+      - 4243:21
+    environment:
+      - FTP_USER=${FTP_USER}
+      - FTP_PASSWORD=${FTP_PASSWORD}
+    mac_address: ${MAC_SERVER}
+    networks:
+      inquisitor:
+        ipv4_address: ${IP_SERVER}
+  attacker:
+    container_name: attacker
+    mac_address: ${MAC_ATTACKER}
+    privileged: true
+    build:
+      context: .
+      dockerfile: Dockerfile.attacker
+    environment:
+      - IP_CLIENT=${IP_CLIENT}
+      - IP_SERVER=${IP_SERVER}
+      - MAC_CLIENT=${MAC_CLIENT}
+      - MAC_SERVER=${MAC_SERVER}
+    networks:
+      inquisitor:
+        ipv4_address: ${IP_ATTACKER}
 
 networks:
-  test-net:
+  inquisitor:
     driver: bridge
-    # ipam:
-    #   config:
-    #     - subnet: 172.20.0.0/16
+    ipam:
+      driver: default
+      config:
+        - subnet: ${SUBNET}
+          gateway: 192.168.2.0

@@ -1,0 +1,5 @@
+FROM debian:bookworm
+
+RUN apt-get update -y && apt-get -y install ftp net-tools curl tcpdump iputils-ping netcat-openbsd traceroute iproute2
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]
